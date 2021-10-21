@@ -1,6 +1,3 @@
-from typing import final
-
-
 class Node:
     def __init__(self, name, initial=False, final=False) -> None:
         self.name = name
