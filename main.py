@@ -6,25 +6,32 @@ def read_file(filename):
         for i in range(len(dados)):
             dados[i] = dados[i].strip("\n")
         estados = dados[0].split(" ")[1:]
-        estadoI = dados[1].split(" ")[1:]
-        estadosF = dados[2].split(" ")[1:]
+        alfabeto = list(dados[1][3:])
+        estadoI = dados[2].split(" ")[1:]
+        estadosF = dados[3].split(" ")[1:]
+
         regras = []
         casosTeste = []
-        for arr in dados[3:dados.index('---')]:
-            arr = arr.split(" ")
-            arr.remove('->')
-            arr.remove('|')
+        for arr in dados[4:dados.index('---')]:
+            arr = arr.replace('->', '')
+            states = arr[:arr.index('|')-1].split(" ")
             simb: str
-            for simb in arr[2:]:
-                regras.append(tuple([arr[0], arr[1], simb]))
+            for simb in arr[arr.index('|')+2::2]:
+                if simb == '\\' and simb in alfabeto:
+                    raise Exception
+                
+                if not simb in alfabeto and simb != '\\':
+                    raise Exception
+
+                regras.append(tuple([states[0], states[2], simb]))
 
         for arr in dados[dados.index('---') + 1:]:
             casosTeste.append(arr)
 
-    return estados, estadoI, estadosF, regras, casosTeste
+    return estados, alfabeto, estadoI, estadosF, regras, casosTeste
 
 if __name__ == "__main__":
-    estados, estadoI, estadosF, regras, casosTeste = read_file("./text/test2.txt")
+    estados, alfabeto, estadoI, estadosF, regras, casosTeste = read_file("./text/test2.txt")
 
     g = Graph()
     for e in estados:
