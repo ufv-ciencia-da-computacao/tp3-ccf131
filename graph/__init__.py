@@ -32,26 +32,37 @@ class Graph:
         else:
             raise Exception
     
+    def dfs(self, edges: list, curr_state: Node, list_symbols: str, pos: int) -> bool:
+        ans = False
+        
+        if pos >= len(list_symbols):
+            if curr_state.final:
+                return True
+            else:
+                return False
+
+        neighs, transitions = zip(*edges)
+    
+        for i in range(len(transitions)):
+            if transitions[i] == list_symbols[pos] or transitions[i] == '\\':
+                next_state_name = neighs[i]
+                n = self.get_node(next_state_name)
+                edges = self.edges[n.name]
+
+                ans |= self.dfs(edges, n, list_symbols, pos+1)
+        
+        if list_symbols[pos] == '':
+            ans |= self.dfs(edges, curr_state, list_symbols, pos+1)
+        
+        return ans
+
     def is_valid(self, list_symbols: str):
         if self.init_states and self.final_states: 
             for name in self.init_states:
                 n = self.get_node(name)
                 edges = self.edges[n.name]
-                for s in list_symbols:
-                    neighs, transitions = zip(*edges)
 
-                    next_state_name = None
-                    if s in transitions:
-                        next_state_name = neighs[transitions.index(s)]
-
-                    if next_state_name is None:
-                        if n.final:
-                            return True
-                        return False
-
-                    n = self.get_node(next_state_name)
-                    edges = self.edges[n.name]
-                if n.final:
+                if self.dfs(edges, n, list_symbols, 0):
                     return True
 
             return False
@@ -93,7 +104,7 @@ if __name__ == '__main__':
     else:
         print("X")
 
-    if g.is_valid(" "):
+    if g.is_valid(""):
         print("OK")
     else:
         print("X")
