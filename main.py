@@ -1,5 +1,7 @@
-def read_file():
-    with open("test1.txt", "r") as arquivo:
+from graph import Graph, Node
+
+def read_file(filename):
+    with open(filename, "r") as arquivo:
         dados = arquivo.readlines()
         for i in range(len(dados)):
             dados[i] = dados[i].strip("\n")
@@ -21,3 +23,26 @@ def read_file():
 
     return estados, estadoI, estadosF, regras, casosTeste
 
+if __name__ == "__main__":
+    estados, estadoI, estadosF, regras, casosTeste = read_file("./text/test1.txt")
+
+    g = Graph()
+    for e in estados:
+        initial = False
+        final = False
+        if e in estadoI:
+            initial = True
+        
+        if e in estadosF:
+            final = True
+
+        g.add_nodes(Node(e, initial=initial, final=final))
+
+    for r in regras:
+        g.add_neighbors(r[0], r[1], r[2])
+    
+    for tcase in casosTeste:
+        if g.is_valid(tcase):
+            print('OK')
+        else:
+            print('X')

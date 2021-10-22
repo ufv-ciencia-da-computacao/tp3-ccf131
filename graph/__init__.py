@@ -111,4 +111,4 @@ if __name__ == '__main__':
     if g.is_valid("1"):
         print("OK")
     else:
-        print("X")    
+        print("X")
