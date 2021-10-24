@@ -19,7 +19,7 @@ def read_file(filename):
             for simb in arr[arr.index('|')+2::2]:
                 if simb == '\\' and simb in alfabeto:
                     raise Exception
-                
+
                 if not simb in alfabeto and simb != '\\':
                     raise Exception
 
@@ -31,7 +31,7 @@ def read_file(filename):
     return estados, alfabeto, estadoI, estadosF, regras, casosTeste
 
 if __name__ == "__main__":
-    estados, alfabeto, estadoI, estadosF, regras, casosTeste = read_file("./text/test2.txt")
+    estados, alfabeto, estadoI, estadosF, regras, casosTeste = read_file("./text/test1.txt")
 
     g = Graph()
     for e in estados:
@@ -39,7 +39,7 @@ if __name__ == "__main__":
         final = False
         if e in estadoI:
             initial = True
-        
+
         if e in estadosF:
             final = True
 
@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     for r in regras:
         g.add_neighbors(r[0], r[1], r[2])
-    
+
     for tcase in casosTeste:
         if g.is_valid(tcase):
             print('OK')

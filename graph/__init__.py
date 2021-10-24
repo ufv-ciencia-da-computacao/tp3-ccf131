@@ -10,31 +10,31 @@ class Graph:
         self.nodes = {}
         self.init_states = []
         self.final_states = []
-    
+
     def add_nodes(self, node: Node):
         self.edges[node.name] = []
         self.nodes[node.name] = node
-        
+
         if node.initial:
             self.init_states.append(node.name)
-        
+
         if node.final:
             self.final_states.append(node.name)
-    
+
     def get_node(self, source_name: str) -> Node:
         if source_name in self.nodes.keys():
             return self.nodes[source_name]
         return None
-    
+
     def add_neighbors(self, source_name: str, destination_name: str, symbol: str):
         if self.get_node(source_name) is not None:
             self.edges[source_name].append((destination_name, symbol))
         else:
             raise Exception
-    
+
     def dfs(self, edges: list, curr_state: Node, list_symbols: str, pos: int) -> bool:
         ans = False
-        
+
         if pos >= len(list_symbols):
             if curr_state.final:
                 return True
@@ -42,22 +42,25 @@ class Graph:
                 return False
 
         neighs, transitions = zip(*edges)
-    
+
         for i in range(len(transitions)):
             if transitions[i] == list_symbols[pos] or transitions[i] == '\\':
                 next_state_name = neighs[i]
                 n = self.get_node(next_state_name)
                 edges = self.edges[n.name]
 
-                ans |= self.dfs(edges, n, list_symbols, pos+1)
-        
+                if transitions[i] == '\\':
+                    ans |= self.dfs(edges, n, list_symbols, pos)
+                else:
+                    ans |= self.dfs(edges, n, list_symbols, pos+ 1)
+
         if list_symbols[pos] == '':
             ans |= self.dfs(edges, curr_state, list_symbols, pos+1)
-        
+
         return ans
 
     def is_valid(self, list_symbols: str):
-        if self.init_states and self.final_states: 
+        if self.init_states and self.final_states:
             for name in self.init_states:
                 n = self.get_node(name)
                 edges = self.edges[n.name]
