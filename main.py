@@ -31,7 +31,8 @@ def read_file(filename):
     return estados, alfabeto, estadoI, estadosF, regras, casosTeste
 
 if __name__ == "__main__":
-    estados, alfabeto, estadoI, estadosF, regras, casosTeste = read_file("./text/test1.txt")
+    filename = input()
+    estados, alfabeto, estadoI, estadosF, regras, casosTeste = read_file(filename)
 
     g = Graph()
     for e in estados:
